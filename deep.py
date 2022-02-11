@@ -20,6 +20,8 @@ import speech_recognition as sr
 import wikipedia
 from gtts import gTTS
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from webdriver_manager.chrome import ChromeDriverManager
 from youtube_search import YoutubeSearch
@@ -27,7 +29,7 @@ from youtube_search import YoutubeSearch
 # Khúc này là khai báo các biến cho quá trình làm con Alex
 wikipedia.set_lang('vi')
 language = 'vi'
-path = ChromeDriverManager().install()
+s=Service(ChromeDriverManager().install())
 robot_ear = speech_recognition.Recognizer()
 
 
@@ -35,7 +37,7 @@ robot_ear = speech_recognition.Recognizer()
 def speak(text):
     print("Bot: {}".format(text))
     tts = gTTS(text=text, lang=language, slow= False)
-    filename=r'C:\Users\ASUS\Desktop\trolyao\sound.mp3'
+    filename=r'D:\hoctap\trolyao\sound.mp3'
     tts.save(filename)
     playsound.playsound(filename, False)
     os.remove(filename)
@@ -107,15 +109,15 @@ def open_application(text):
     if "google" in text:
         speak("Mở Google Chrome")
         time.sleep(2)
-        os.startfile(r"C:\Program Files (x86)\Google\Chrome\Application/chrome.exe") # Trong ngoặc là đường dẫn đến ứng dụng trong máy mình, các bạn tự tìm trong máy mình sao cho đúng nha
+        os.startfile("C:\\Users\\Public\\Desktop\\Google Chrome.lnk") # Trong ngoặc là đường dẫn đến ứng dụng trong máy mình, các bạn tự tìm trong máy mình sao cho đúng nha
+    elif "steam" in text:
+        speak("Mở Steam") 
+        time.sleep(2)
+        os.startfile("C:\\Users\\Public\\Desktop\\Steam.lnk") # Ở đây cũng như ở trên
     elif "garena" in text:
-        speak("Mở Garena") 
+        speak("Mở Garena")
         time.sleep(2)
-        os.startfile("C:\Program Files (x86)\Garena\Garena\Garena.exe") # Ở đây cũng như ở trên
-    elif "medibang" in text:
-        speak("Mở MediBang Paint Pro")
-        time.sleep(2)
-        os.startfile("D:\MediBangPaintPro\MediBangPaintPro.exe") # Ở trển cũng giống dưới này =))
+        os.startfile("C:\\Users\\Public\\Desktop\\Garena.lnk") # Ở trển cũng giống dưới này =))
     else:
         speak("Ứng dụng chưa được cài đặt. Bạn hãy thử lại!")
         time.sleep(3)
@@ -139,11 +141,12 @@ def open_website(text):
 def open_google_and_search(text):
     search_for = text.split("kiếm", 1)[1]
     speak('Okay!')
-    driver = webdriver.Chrome(path)
+    driver = webdriver.Chrome(service=s)
+    driver.maximize_window()
     driver.get("http://www.google.com")
-    que = driver.find_element_by_xpath("//input[@name='q']")
+    que = driver.find_element(By.NAME, 'q')
     que.send_keys(str(search_for))
-    que.send_keys(Keys.RETURN)
+    que.send_keys(Keys.RETURN);
     time.sleep(10)
 
 
@@ -157,9 +160,8 @@ def send_email(text):
         mail = smtplib.SMTP('smtp.gmail.com', 587)
         mail.ehlo()
         mail.starttls()
-        mail.login('xyz@gmail.com', 'abc') # 'xyz' ở đây là địa chỉ email của bạn (địa chỉ email gửi), 'abc' là mật khẩu của email đó
-        mail.sendmail('nghivu201@gmail.com', 
-                      'yuyi2k1@gmail.com', content.encode('utf-8')) # 'xyz' ở đây cũng như bên trên, nhưng '123' là địa chỉ email nhận (email được bạn gửi thư)
+        mail.login('nghivu147@gmail.com', 'nghivu3017') # 'xyz' ở đây là địa chỉ email của bạn (địa chỉ email gửi), 'abc' là mật khẩu của email đó
+        mail.sendmail('nghivu147@gmail.com', 'yuyi2k1@gmail.com', content.encode('utf-8')) # 'xyz' ở đây cũng như bên trên, nhưng '123' là địa chỉ email nhận (email được bạn gửi thư)
         mail.close()
         speak('Email của bạn vùa được gửi. Bạn check lại email nhé hihi.')
     else:
@@ -170,6 +172,7 @@ def send_email(text):
 
 def current_weather():
     speak("Bạn muốn xem thời tiết ở đâu ạ.")
+    time.sleep(5)
     ow_url = "http://api.openweathermap.org/data/2.5/weather?"
     city = get_text()
     if not city:
@@ -222,7 +225,7 @@ def play_song():
 # Không biết dạo này tình hình Cô Vy như thế nào rồi nhỉ, đọc báo phát xem thử nào :)
 def read_news():
     speak("Bạn muốn đọc báo về gì")
-    
+    time.sleep(5)
     queue = get_text()
     params = {
         'apiKey': '30d02d187f7140faacf9ccd27a1441ad',
@@ -283,7 +286,8 @@ def tell_me_about():
 
 # Khúc này là tự bạch của Alex. Bạn có thể thay đổi cái nội dung bên trong tùy theo ý thích của bạn nha
 def introduce():
-    speak("bot được phát triển bởi Nghị")
+    speak("bot được phát triển bởi nhóm 6 bao gồm các thành viên Vũ Thành Nghị, Bùi Minh Thái và Nguyễn Lê Đình Hiếu")
+    time.sleep(8)
 
 
 # Ở đây là những gì mà Alex có thể làm và đang show cái list ra cho bạn xem nè
@@ -321,7 +325,7 @@ def assistant():
                 break
             elif "có thể làm gì" in text:
                 help_me()
-            elif "chào robot" in text:
+            elif "chào" in text:
                 hello(name)
             elif "giờ" in text or "ngày" in text:
                 get_time(text)
@@ -338,7 +342,7 @@ def assistant():
                 send_email(text)
             elif "thời tiết" in text:
                 current_weather()
-            elif "chơi nhạc" in text:
+            elif "nghe nhạc" in text:
                 play_song()
             elif "hình nền" in text:
                 change_wallpaper()
