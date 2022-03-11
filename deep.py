@@ -153,6 +153,7 @@ def open_google_and_search(text):
 # Alex còn biết gửi mail mà không cần bật gmail á, thấy giỏi hôn nè ^^
 def send_email(text):
     speak('Bạn gửi email cho ai nhỉ')
+    time.sleep(4)
     recipient = get_text()
     if 'nghĩa' in recipient: # 'nghĩa' ở đây là keywords để máy tiếp tục gửi email cho bạn. Bạn có thể thay cái keywords này
         speak('Nội dung bạn muốn gửi là gì')
@@ -304,7 +305,7 @@ def help_me():
     8. Thay đổi hình nền máy tính
     9. Đọc báo hôm nay
     10. Kể bạn biết về thế giới """)
-    time.sleep(27)
+    time.sleep(35)
                     
 
 # Liên kết chúng lại để tạo thành con Bot Alex hoàn chỉnh thôi nào ^_^
